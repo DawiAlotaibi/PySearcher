@@ -1,4 +1,7 @@
 import os
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
 from docx import Document
 import json
 from PyPDF2 import PdfReader
@@ -6,19 +9,9 @@ from pptx import Presentation
 
 
 def check_file_contents(filename, search_string, case_sensitive=True, exact_match=False):
-    """
-    Check the contents of a file for the presence of a search string.
-
-    Args:
-        filename (str): The name of the file to search.
-        search_string (str): The string to search for in the file.
-        case_sensitive (bool, optional): Whether the search should be case-sensitive. Defaults to True.
-        exact_match (bool, optional): Whether to search for an exact match of the search string. Defaults to False.
-    """
     file_extension = os.path.splitext(filename)[1]
     script_path = os.path.abspath(__file__)
-
-    original_search_string = search_string  # Store the original search string
+    original_search_string = search_string
 
     if not case_sensitive:
         search_string = search_string.lower()
@@ -33,13 +26,12 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
             if exact_match:
                 if search_string == paragraph_text:
-                    print(f"Found '{original_search_string}' in {filename} - Line: {paragraph.text}")
+                    results_text.insert(tk.END,
+                                        f"Found '{original_search_string}' in {filename} - Line: {paragraph.text}\n")
             else:
                 if search_string in paragraph_text:
-                    print(f"Found '{original_search_string}' in {filename} - Line: {paragraph.text}")
-
-    elif filename == script_path:
-        return
+                    results_text.insert(tk.END,
+                                        f"Found '{original_search_string}' in {filename} - Line: {paragraph.text}\n")
 
     elif file_extension == '.py':
         with open(filename, 'r') as file:
@@ -49,10 +41,13 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
                 if exact_match:
                     if search_string == line.strip():
-                        print(f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}")
+                        results_text.insert(tk.END,
+                                            f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}\n")
                 else:
                     if search_string in line:
-                        print(f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}")
+                        results_text.insert(tk.END,
+                                            f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}\n")
+
 
     elif file_extension == '.txt':
         with open(filename, 'r') as file:
@@ -62,10 +57,12 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
                 if exact_match:
                     if search_string == line.strip():
-                        print(f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}")
+                        results_text.insert(tk.END,
+                                            f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}\n")
                 else:
                     if search_string in line:
-                        print(f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}")
+                        results_text.insert(tk.END,
+                                            f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}\n")
 
     elif file_extension == '.json':
         with open(filename, 'r') as file:
@@ -77,10 +74,10 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
             if exact_match:
                 if search_string == data_str:
-                    print(f"Found '{original_search_string}' in {filename}")
+                    results_text.insert(tk.END, f"Found '{original_search_string}' in {filename}\n")
             else:
                 if search_string in data_str:
-                    print(f"Found '{original_search_string}' in {filename}")
+                    results_text.insert(tk.END, f"Found '{original_search_string}' in {filename}\n")
 
     elif file_extension == '.pdf':
         with open(filename, 'rb') as file:
@@ -92,10 +89,12 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
                 if exact_match:
                     if search_string == page_content.strip():
-                        print(f"Found '{original_search_string}' in {filename} - Page {page_number}")
+                        results_text.insert(tk.END,
+                                            f"Found '{original_search_string}' in {filename} - Page {page_number}\n")
                 else:
                     if search_string in page_content:
-                        print(f"Found '{original_search_string}' in {filename} - Page {page_number}")
+                        results_text.insert(tk.END,
+                                            f"Found '{original_search_string}' in {filename} - Page {page_number}\n")
 
     elif file_extension == '.pptx':
         prs = Presentation(filename)
@@ -111,42 +110,87 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
             if exact_match:
                 if search_string == slide_text.strip():
-                    print(f"Found '{original_search_string}' in {filename} - Slide {slide_number}")
+                    results_text.insert(tk.END,
+                                        f"Found '{original_search_string}' in {filename} - Slide {slide_number}\n")
             else:
                 if search_string in slide_text:
-                    print(f"Found '{original_search_string}' in {filename} - Slide {slide_number}")
+                    results_text.insert(tk.END,
+                                        f"Found '{original_search_string}' in {filename} - Slide {slide_number}\n")
 
     else:
-        print(f"Unsupported file format: {file_extension}")
+        results_text.insert(tk.END, f"Unsupported file format: {file_extension}\n")
 
 
-def search_in_files(search_string):
-    """
-    Search for a given string in all files within the specified directory or the current directory.
+def browse_directory():
+    selected_directory = filedialog.askdirectory()
+    directory_var.set(selected_directory)
 
-    Args:
-        search_string (str): The string to search for.
-    """
-    case_sensitive_input = input("Do you want the search to be case-sensitive? (y/n) ")
-    case_sensitive = case_sensitive_input.lower() == 'y'
 
-    exact_match_input = input("Do you want to search for an exact match? (y/n) ")
-    exact_match = exact_match_input.lower() == 'y'
+def search_files():
+    search_string = search_entry.get().strip()
+    if not search_string:
+        messagebox.showwarning("Empty Search String", "Please enter a search string.")
+        return
 
-    # Get the directory to search
-    search_directory = input("Enter the directory to search (leave blank for current directory): ").strip()
+    case_sensitive = case_sensitive_var.get()
+    exact_match = exact_match_var.get()
+
+    search_directory = directory_var.get()
     if not search_directory:
-        search_directory = os.path.dirname(os.path.abspath(__file__))
+        messagebox.showwarning("No Directory Selected", "Please select a directory to search.")
+        return
 
-    # Iterate over all files in the directory
+    script_file = os.path.normpath(os.path.abspath(__file__))
+
+    results_text.delete(1.0, tk.END)
+
     for filename in os.listdir(search_directory):
-        # Check if the file is a regular file and exclude temporary files
-        if os.path.isfile(os.path.join(search_directory, filename)) and not filename.startswith('~$'):
-            check_file_contents(os.path.join(search_directory, filename), search_string, case_sensitive, exact_match)
+        file_path = os.path.normpath(os.path.join(search_directory, filename))
 
-if __name__ == '__main__':
-    """
-    Main entry point of the program. Prompts the user for a search string and calls the search_in_files method.
-    """
-    search_string = input("What string do you want to search for? ")
-    search_in_files(search_string)
+        if os.path.isfile(file_path) and not filename.startswith('~$') and file_path != script_file:
+            check_file_contents(file_path, search_string, case_sensitive, exact_match)
+
+
+# Create the main window
+window = tk.Tk()
+window.title("File Searcher")
+window.geometry("500x400")
+
+# Create and place widgets
+search_label = tk.Label(window, text="Search String:")
+search_label.pack()
+
+search_entry = tk.Entry(window, width=50)
+search_entry.pack()
+
+case_sensitive_var = tk.BooleanVar()
+case_sensitive_checkbox = tk.Checkbutton(window, text="Case Sensitive", variable=case_sensitive_var)
+case_sensitive_checkbox.pack()
+
+exact_match_var = tk.BooleanVar()
+exact_match_checkbox = tk.Checkbutton(window, text="Exact Match", variable=exact_match_var)
+exact_match_checkbox.pack()
+
+directory_var = tk.StringVar()
+directory_label = tk.Label(window, text="Search Directory:")
+directory_label.pack()
+
+directory_frame = tk.Frame(window)
+directory_entry = tk.Entry(directory_frame, textvariable=directory_var, width=40)
+directory_entry.pack(side=tk.LEFT)
+
+browse_button = tk.Button(directory_frame, text="Browse", command=browse_directory)
+browse_button.pack(side=tk.LEFT)
+
+directory_frame.pack()
+
+search_button = tk.Button(window, text="Search", command=search_files)
+search_button.pack()
+
+results_label = tk.Label(window, text="Results:")
+results_label.pack()
+
+results_text = tk.Text(window, width=60, height=15)
+results_text.pack()
+
+window.mainloop()
