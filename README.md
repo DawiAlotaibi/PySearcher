@@ -23,5 +23,6 @@ PySearcher is a Python script that allows you to search for a specific string wi
 
 ## Future Work
 In the future, we plan to enhance File Searcher by developing a graphical user interface (GUI). The GUI will provide a more user-friendly and intuitive way to interact with the script, allowing users to select directories, set search preferences, and view search results in a convenient manner. Also, we plan on adding more file formats support. Stay tuned for updates!
+
 Feel free to contribute, report any issues, or suggest improvements by creating an issue or submitting a pull request.
 
