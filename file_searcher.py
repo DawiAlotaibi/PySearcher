@@ -31,8 +31,7 @@ class App(ttk.Frame):
         self.setup_widgets()
 
     def setup_widgets(self):
-        # self.search_label = tk.Label(window, text="Search String:")
-        # self.search_label.pack()
+
         self.search_label = ttk.Label(
             self,
             text="Search String:",
@@ -41,31 +40,26 @@ class App(ttk.Frame):
         )
         self.search_label.grid(row=0, column=0, padx=5, pady=(0, 10), sticky="ew")
 
-        # self.search_entry = tk.Entry(window, width=50)
-        # self.search_entry.pack()
         self.search_entry = ttk.Entry(self)
         self.search_entry.insert(0, "Entry")
         self.search_entry.grid(row=0, column=1, padx=5, pady=(0, 10), sticky="ew")
 
         self.case_sensitive_var = tk.BooleanVar()
-        # self.case_sensitive_checkbox = tk.Checkbutton(window, text="Case Sensitive", variable=self.case_sensitive_var)
-        # self.case_sensitive_checkbox.pack()
+
         self.case_sensitive_checkbox = ttk.Checkbutton(
             self, text="Case Sensitive", variable=self.case_sensitive_var
         )
         self.case_sensitive_checkbox.grid(row=0, column=2, padx=5, pady=(0, 10), sticky="ew")
 
         self.exact_match_var = tk.BooleanVar()
-        # self.exact_match_checkbox = tk.Checkbutton(window, text="Exact Match", variable=self.exact_match_var)
-        # self.exact_match_checkbox.pack()
+
         self.exact_match_checkbox = ttk.Checkbutton(
             self, text="Exact Match", variable=self.exact_match_var
         )
         self.exact_match_checkbox.grid(row=0, column=3, padx=5, pady=(0, 10), sticky="ew")
 
         self.directory_var = tk.StringVar()
-        # self.directory_label = tk.Label(window, text="Search Directory:")
-        # self.directory_label.pack()
+
         self.directory_label = ttk.Label(
             self,
             text="Search Directory:",
@@ -74,11 +68,6 @@ class App(ttk.Frame):
         )
         self.directory_label.grid(row=1, column=0, padx=5, pady=(0, 10), sticky="ew")
 
-        # self.directory_frame = tk.Frame(window)
-        # self.directory_entry = tk.Entry(self.directory_frame, textvariable=self.directory_var, width=40)
-        # self.directory_entry.pack(side=tk.LEFT)
-        # self.directory_frame = ttk.Frame(self, padding=(0, 0, 0, 10))
-        # self.directory_frame.grid(row=1, column=1, padx=5, pady=(0, 10), sticky="ew", rowspan=3)
         self.directory_entry = ttk.Entry(self, textvariable=self.directory_var, width=40)
         self.directory_entry.grid(row=1, column=1, padx=5, pady=(0, 10), sticky="ew")
         self.browse_button = ttk.Button(self, text="Browse", command=browse_directory)
@@ -86,19 +75,7 @@ class App(ttk.Frame):
         self.search_button = ttk.Button(self, text="Search", command=search_files)
         self.search_button.grid(row=2, column=1, padx=5, pady=(30, 10), sticky="ew")
 
-        # self.browse_button = tk.Button(self.directory_frame, text="Browse", command=browse_directory)
-        # self.browse_button.pack(side=tk.LEFT)
-        #
-        # self.directory_frame.pack()
-        #
-        # self.search_button = tk.Button(window, text="Search", command=search_files)
-        # self.search_button.pack()
-        #
-        # self.results_label = tk.Label(window, text="Results:")
-        # self.results_label.pack()
-        #
         self.results_text = tk.Text(window, width=60, height=15)
-        # self.results_text.pack()
 
     def clear_treeview(self):
         self.popup.treeview.delete(*self.popup.treeview.get_children())
@@ -128,23 +105,24 @@ class App(ttk.Frame):
         )
         self.popup.treeview.pack(expand=True, fill="both")
         self.popup.scrollbar.config(command=self.popup.treeview.yview)
+        # Create a custom style
+        style = ttk.Style()
+        style.configure("Custom.Treeview.Heading", padding=(10, 5))  # Adjust the padding values as needed
+        style.configure("Custom.Treeview.column", padding=(20, 5))  # Adjust the padding values as needed
+
+
+        # Apply the custom style to the Treeview widget
+        self.popup.treeview["style"] = "Custom.Treeview"
 
         # Treeview columns
-        self.popup.treeview.column("#0", anchor="w", width=120)
-        self.popup.treeview.column(2, anchor="w", width=120)
-        self.popup.treeview.column(1, anchor="w", width=120)
+        self.popup.treeview.column("#0", anchor="w", minwidth=120,stretch=True)
+        self.popup.treeview.column(2, anchor="w", minwidth=120,stretch=True)
+        self.popup.treeview.column(1, anchor="w", minwidth=120,stretch=True)
 
         # Treeview headings
         self.popup.treeview.heading("#0", text="Path", anchor="center")
         self.popup.treeview.heading(1, text="File", anchor="center")
         self.popup.treeview.heading(2, text="Line/Page", anchor="center")
-        # # Add content to the popup window
-        # label = ttk.Label(self.popup, text="This is a popup window!")
-        # label.pack(padx=10, pady=10)
-        #
-        # # Add a button to close the popup
-        # close_button = ttk.Button(self.popup, text="Close", command=self.popup.destroy)
-        # close_button.pack(pady=10,fill="both", expand=True)
 
         for item in self.treeview_data:
             print(item)
@@ -154,7 +132,7 @@ class App(ttk.Frame):
             if item[0] == "" or item[1] in {8, 21}:
                 self.popup.treeview.item(item[1], open=True)  # Open parents
         self.popup.update()
-        self.popup.minsize(self.popup.winfo_width(), self.popup.winfo_height())
+        self.popup.minsize(self.popup.winfo_width() + 200, self.popup.winfo_height() + 200)
         x_coordinate = int((self.popup.winfo_screenwidth() / 2) - (self.popup.winfo_width() / 2))
         y_coordinate = int((self.popup.winfo_screenheight() / 2) - (self.popup.winfo_height() / 2))
         self.popup.geometry("+{}+{}".format(x_coordinate, y_coordinate - 20))
@@ -162,8 +140,6 @@ class App(ttk.Frame):
 
 def check_file_contents(filename, search_string, case_sensitive=True, exact_match=False):
     file_extension = os.path.splitext(filename)[1]
-    script_path = os.path.abspath(__file__)
-    original_search_string = search_string
 
     if not case_sensitive:
         search_string = search_string.lower()
@@ -179,15 +155,11 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
             if exact_match:
                 if search_string == paragraph_text:
-                    # app.results_text.insert(tk.END,
-                    #                         f"Found '{original_search_string}' in {filename} - Line: {line_number}\n")
                     actualFileName = os.path.basename(filename)
                     app.treeview_data.append(
                         ("", len(app.treeview_data) + 1, filename, (actualFileName, f"Line: {line_number}")))
             else:
                 if search_string in paragraph_text:
-                    # app.results_text.insert(tk.END,
-                    #                         f"Found '{original_search_string}' in {filename} - Line: {line_number}\n")
                     actualFileName = os.path.basename(filename)
                     app.treeview_data.append(
                         ("", len(app.treeview_data) + 1, filename, (actualFileName, f"Line: {line_number}")))
@@ -203,16 +175,13 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
                 if exact_match:
                     if search_string == line.strip():
-                        # app.results_text.insert(tk.END,
-                        #                         f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}\n")
                         actualFileName = os.path.basename(filename)
                         app.treeview_data.append(("", len(app.treeview_data) + 1, filename,
                                                   (actualFileName, f"Line: {line_number}")))
 
                 else:
                     if search_string in line:
-                        # app.results_text.insert(tk.END, f"Found '{original_search_string}' in {filename} - Line {
-                        # line_number}: {line.strip()}\n")
+
                         actualFileName = os.path.basename(filename)
                         app.treeview_data.append(("", len(app.treeview_data) + 1, filename,
                                                   (actualFileName, f"Line: {line_number}")))
@@ -227,15 +196,11 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
                 if exact_match:
                     if search_string == line.strip():
-                        # app.results_text.insert(tk.END,
-                        #                         f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}\n")
                         actualFileName = os.path.basename(filename)
                         app.treeview_data.append(("", len(app.treeview_data) + 1, filename,
                                                   (actualFileName, f"Line: {line_number}")))
                 else:
                     if search_string in line:
-                        # app.results_text.insert(tk.END,
-                        #                         f"Found '{original_search_string}' in {filename} - Line {line_number}: {line.strip()}\n")
                         actualFileName = os.path.basename(filename)
                         app.treeview_data.append(("", len(app.treeview_data) + 1, filename,
                                                   (actualFileName, f"Line: {line_number}")))
@@ -250,13 +215,11 @@ def check_file_contents(filename, search_string, case_sensitive=True, exact_matc
 
             if exact_match:
                 if search_string == data_str:
-                    # app.results_text.insert(tk.END, f"Found '{original_search_string}' in {filename}\n")
                     actualFileName = os.path.basename(filename)
                     app.treeview_data.append(("", len(app.treeview_data) + 1, filename,
                                               (actualFileName, data_str)))
             else:
                 if search_string in data_str:
-                    # app.results_text.insert(tk.END, f"Found '{original_search_string}' in {filename}\n")
                     actualFileName = os.path.basename(filename)
                     app.treeview_data.append(("", len(app.treeview_data) + 1, filename,
                                               (actualFileName, data_str)))
