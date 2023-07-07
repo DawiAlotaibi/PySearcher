@@ -5,7 +5,7 @@ PySearcher is a Python script that allows you to search for a specific string wi
 
 ## How to Use
 1. Clone the repository or download the script file (`file_searcher.py`) to your local machine.
-2. Install the required dependencies by running `pip install python-docx PyPDF2 pptx` in your terminal or command prompt.
+2. Install the required dependencies by running `pip install python-docx PyPDF2 pptx tkinter` in your terminal or command prompt.
 3. Open a terminal or command prompt and navigate to the directory where the script is located.
 4. Run the script using the command `python file_searcher.py`.
 5. Enter the string you want to search for when prompted.
