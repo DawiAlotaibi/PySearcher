@@ -45,8 +45,9 @@ PySearcher is a Python script that allows you to search for a specific string wi
 
 ## Future Work
 1. Make the GUI better.
-2. Make a web version where people could upload to the application and get results.
-3. Add more supported file formats.
+2. Add support for a recursive search for subdirectories.
+3. Make a web version where people could upload to the application and get results.
+4. Add more supported file formats.
 
 Feel free to contribute, report any issues, or suggest improvements by creating an issue or submitting a pull request.
 
