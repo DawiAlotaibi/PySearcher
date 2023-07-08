@@ -24,11 +24,11 @@ PySearcher is a Python script that allows you to search for a specific string wi
 
 3. **Select the directory to search**
 
-![Main Menu](Images/selcting%20a%20floder.png)
+![Select folder popup](Images/selctingAFloder.png)
 
 4. **The output**
 
-![Main Menu](Images/the%20output.png)
+![The output](Images/output.png)
 
 
 ## Capabilities
